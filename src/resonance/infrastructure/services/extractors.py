@@ -2,10 +2,17 @@
 from __future__ import annotations
 
 import re
-from typing import Dict, Iterable, List, Sequence, Tuple
+from typing import Dict, Iterable, List, Sequence
 
-from worldbuild.domain.entities import Document, DocumentChunk, EntityType, Relation, WorldEntity
-from worldbuild.domain.services import ExtractionService
+from resonance.domain.entities import (
+    Document,
+    DocumentChunk,
+    EntityType,
+    ExtractionResult,
+    Relation,
+    WorldEntity,
+)
+from resonance.domain.services import ExtractionService
 
 
 class HeuristicExtractor(ExtractionService):
@@ -24,13 +31,11 @@ class HeuristicExtractor(ExtractionService):
         }
         self._line_pattern = re.compile(r"^(?P<label>[A-Za-z]+)\s*[:\-]\s*(?P<body>.+)$")
 
-    def extract(
-        self, document: Document, chunks: Sequence[DocumentChunk]
-    ) -> Tuple[Sequence[WorldEntity], Sequence[Relation]]:
+    def extract(self, document: Document, chunks: Sequence[DocumentChunk]) -> ExtractionResult:
         entities: List[WorldEntity] = []
         for chunk in chunks:
             entities.extend(self._extract_from_chunk(chunk))
-        return entities, []
+        return ExtractionResult(entities=entities, relations=[])
 
     def _extract_from_chunk(self, chunk: DocumentChunk) -> Iterable[WorldEntity]:
         for raw_line in chunk.text.splitlines():

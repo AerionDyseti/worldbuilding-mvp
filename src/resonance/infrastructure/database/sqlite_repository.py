@@ -5,10 +5,11 @@ import json
 from pathlib import Path
 from typing import Sequence
 
-from sqlalchemy import create_engine, insert, or_, select, text
+from sqlalchemy import create_engine, or_, select, text
+from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.engine import Engine
 
-from worldbuild.domain.entities import (
+from resonance.domain.entities import (
     Document,
     DocumentChunk,
     DocumentWithChunks,
@@ -16,7 +17,7 @@ from worldbuild.domain.entities import (
     Relation,
     WorldEntity,
 )
-from worldbuild.domain.services import DocumentRepository
+from resonance.domain.services import DocumentRepository
 
 from . import models
 
@@ -34,6 +35,9 @@ class SQLAlchemyDocumentRepository(DocumentRepository):
             conn.execute(text("PRAGMA foreign_keys=ON"))
         # Ensure tables exist for initial runs; Alembic can take over afterward.
         models.metadata_obj.create_all(self._engine)
+
+    def dispose(self) -> None:
+        self._engine.dispose()
 
     def save_document_with_chunks(
         self, document: Document, chunk_texts: Sequence[str]

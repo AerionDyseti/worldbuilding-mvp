@@ -1,9 +1,18 @@
-"""Domain service protocols for the worldbuilding core."""
+"""Domain service protocols for the Resonance core."""
 from __future__ import annotations
 
-from typing import Protocol, Sequence, Tuple
+from typing import Protocol, Sequence
 
-from .entities import Document, DocumentChunk, DocumentWithChunks, Relation, WorldEntity
+from .entities import (
+    CostEntry,
+    Document,
+    DocumentChunk,
+    DocumentWithChunks,
+    ExtractionResult,
+    Relation,
+    RoutingDecision,
+    WorldEntity,
+)
 
 
 class DocumentRepository(Protocol):
@@ -47,7 +56,7 @@ class ExtractionService(Protocol):
 
     def extract(
         self, document: Document, chunks: Sequence[DocumentChunk]
-    ) -> Tuple[Sequence[WorldEntity], Sequence[Relation]]:
+    ) -> ExtractionResult:
         """Return discovered entities and their relationships."""
 
 
@@ -60,3 +69,20 @@ class EmbeddingService(Protocol):
 
     def embed(self, texts: Sequence[str]) -> Sequence[Sequence[float]]:
         """Return a vector per input text."""
+
+
+class QueryRouter(Protocol):
+    """Classifies queries to determine whether to use local or API routes."""
+
+    def classify(self, query: str) -> RoutingDecision:
+        """Return a routing decision for the supplied query."""
+
+
+class CostTracker(Protocol):
+    """Tracks API usage costs for reporting and governance."""
+
+    def record(self, entry: CostEntry) -> CostEntry:
+        """Persist a new cost entry and return the stored record."""
+
+    def recent(self, limit: int = 20) -> Sequence[CostEntry]:
+        """Return recent cost entries for dashboards or summaries."""

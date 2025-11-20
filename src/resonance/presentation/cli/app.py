@@ -1,23 +1,23 @@
-"""Typer CLI entry point for the worldbuild MVP."""
+"""Typer CLI entry point for the Resonance MVP."""
 from __future__ import annotations
 
 from pathlib import Path
 
 import typer
 
-from worldbuild.application.use_cases.chat import ChatUseCase
-from worldbuild.application.use_cases.ingest_document import IngestDocumentUseCase
-from worldbuild.infrastructure.database.sqlite_repository import SQLAlchemyDocumentRepository
-from worldbuild.infrastructure.services.chunkers import SimpleParagraphChunker
-from worldbuild.infrastructure.services.extractors import HeuristicExtractor
-from worldbuild.infrastructure.services.embeddings import SimpleEmbeddingService
+from resonance.application.use_cases.chat import ChatUseCase
+from resonance.application.use_cases.ingest_document import IngestDocumentUseCase
+from resonance.infrastructure.database.sqlite_repository import SQLAlchemyDocumentRepository
+from resonance.infrastructure.services.chunkers import SimpleParagraphChunker
+from resonance.infrastructure.services.extractors import HeuristicExtractor
+from resonance.infrastructure.services.embeddings import SimpleEmbeddingService
 
-app = typer.Typer(help="Worldbuilding assistant CLI")
+app = typer.Typer(help="Resonance worldbuilding assistant CLI")
 
 
 def _build_repository() -> SQLAlchemyDocumentRepository:
     project_root = Path(__file__).resolve().parents[4]
-    db_path = project_root / "data" / "worldbuild.db"
+    db_path = project_root / "data" / "resonance.db"
     return SQLAlchemyDocumentRepository(db_path)
 
 

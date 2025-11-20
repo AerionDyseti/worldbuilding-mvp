@@ -3,9 +3,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from worldbuild.domain.entities import Document
-from worldbuild.domain.ledger import DocumentLedger
-from worldbuild.domain.services import (
+from resonance.domain.entities import Document
+from resonance.domain.ledger import DocumentLedger
+from resonance.domain.services import (
     Chunker,
     DocumentRepository,
     EmbeddingService,

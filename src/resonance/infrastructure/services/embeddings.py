@@ -5,7 +5,7 @@ import hashlib
 import random
 from typing import Sequence
 
-from worldbuild.domain.services import EmbeddingService
+from resonance.domain.services import EmbeddingService
 
 
 class SimpleEmbeddingService(EmbeddingService):

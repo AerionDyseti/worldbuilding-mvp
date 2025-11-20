@@ -1,4 +1,4 @@
-"""SQLAlchemy Core models backing the worldbuild storage layer."""
+"""SQLAlchemy Core models backing the Resonance storage layer."""
 from __future__ import annotations
 
 from datetime import datetime

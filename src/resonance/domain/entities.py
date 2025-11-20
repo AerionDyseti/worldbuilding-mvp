@@ -1,4 +1,4 @@
-"""Domain models for worldbuilding documents and entities."""
+"""Domain models for Resonance documents and entities."""
 from __future__ import annotations
 
 from datetime import datetime
@@ -18,6 +18,23 @@ class EntityType(str, Enum):
     ITEM = "item"
 
 
+class DocumentType(str, Enum):
+    """Document types for DM's Ark ingestion pipeline."""
+
+    TRANSCRIPT = "transcript"
+    SUMMARY = "summary"
+    HIGHLIGHTS = "highlights"
+    GENERIC = "generic"
+
+
+class QueryRoute(str, Enum):
+    """Routing strategy for query processing."""
+
+    LOCAL = "local"
+    API_SUGGESTED = "api_suggested"
+    API_FORCED = "api_forced"
+
+
 class Document(BaseModel):
     """Represents a source file that has been ingested."""
 
@@ -25,6 +42,9 @@ class Document(BaseModel):
     path: Path
     title: str
     content: str
+    document_type: DocumentType = DocumentType.GENERIC
+    session_number: Optional[int] = None
+    world_id: Optional[str] = None
     metadata: Dict[str, Optional[str]] = Field(default_factory=dict)
     ingested_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -44,6 +64,13 @@ class DocumentWithChunks(BaseModel):
 
     document: Document
     chunks: Sequence[DocumentChunk]
+
+
+class ExtractionResult(BaseModel):
+    """Bundle of entities and relations produced from extraction."""
+
+    entities: Sequence[WorldEntity] = Field(default_factory=list)
+    relations: Sequence[Relation] = Field(default_factory=list)
 
 
 class WorldEntity(BaseModel):
@@ -67,4 +94,25 @@ class Relation(BaseModel):
     object_entity_id: Optional[int] = None
     object_name: Optional[str] = None
     description: str | None = None
+    metadata: Dict[str, Optional[str]] = Field(default_factory=dict)
+
+
+class RoutingDecision(BaseModel):
+    """Routing decision for query processing with cost estimation."""
+
+    route: QueryRoute
+    estimated_cost: Optional[float] = None
+    reasoning: str
+
+
+class CostEntry(BaseModel):
+    """Record of API usage costs for tracking and reporting."""
+
+    id: Optional[int] = None
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    model_name: str
+    input_tokens: int
+    output_tokens: int
+    total_cost: float
+    operation: str  # e.g., "extract_entities", "query_world"
     metadata: Dict[str, Optional[str]] = Field(default_factory=dict)

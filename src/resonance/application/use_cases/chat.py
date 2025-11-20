@@ -1,7 +1,7 @@
 """Application use case for answering questions about the world."""
 from __future__ import annotations
 
-from worldbuild.domain.services import DocumentRepository, EmbeddingService
+from resonance.domain.services import DocumentRepository, EmbeddingService
 
 
 class ChatUseCase:
