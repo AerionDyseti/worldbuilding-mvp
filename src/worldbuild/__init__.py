@@ -1,0 +1,1 @@
+"""Worldbuilding MVP core package."""
