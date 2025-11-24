@@ -16,6 +16,9 @@ class EntityType(str, Enum):
     LOCATION = "location"
     ORGANIZATION = "organization"
     ITEM = "item"
+    FACTION = "faction"
+    EVENT = "event"
+    CONCEPT = "concept"
 
 
 class DocumentType(str, Enum):
